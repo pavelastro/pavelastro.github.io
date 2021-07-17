@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Arbitrary code execution in the universal Turing machine</title>
+
+		<!--
+	  Nota bene: layouting is based on the constraint that the UTM's tape contents
+	  should be displayed without being wrapped - as it is much easier for the reader
+	  to follow if the tape is shown on a single line.
+
+	  Given a font-size of 14px, this leads to a minimal page width of approx. 620px
+	  (plus some white space to the left and to the right)
+
+	  For wide displays, there is a first "breakpoint" at an (arbitrarily chosen)
+	  width of 960px, from which on state diagram and explanation are both shown
+	  side-by-side.
+
+	  A second breakpoint at 1280px limits the width of the explanation column in
+	  order to remain easily readable.
+		-->
+
+		<style>
+    html, body {
+  	    width:100%; height:100%;
+	    margin:0px; padding:0px;
+	    background:rgb(255, 255, 255); color:rgb(174, 73, 73);
+    }
+
+    body * { /* important for mobile devices */
+	    -webkit-text-size-adjust:100%;
+	    text-size-adjust:100%;
+    }
+
+    body {
+	    font-family: "Courier New", monospace;
+	    font-size:14px;
+    }
+
+    .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+    }
+
+    .large  { font-size:24px }
+    .legend { font-size:14px }
+    .small  { font-size:12px }
+    .button { font-size:17px }
+
+    #tape   { font-size:28px }
+    #tape b { font-size:36px } /* does not work well on iPhones, but it's still ok */
+
+    #container {
+	    height:100%;
+	    margin:auto; /* centers #container in body */
+    }
+
+    
+
+    #diagram-and-explanation { margin:0px; padding:0px }
+    #diagram, #explanation   { margin:0px; padding:0px }
+
+    #diagram     { width:620px } /* just enough room for (image &) tape contents */
+    #description { max-width:620px } /* enhancement for small displays */
+
+    #utm {
+	    width:600px; height:794px; /* it's good style to specify img sizes */
+    } /* given the contents of every img, there is no need for any margin */
+
+/*
+   besides the minimal width of 640px there is a "breakpoint" at (an arbitrarily
+	   chosen) width of 960px such that on even wider displays state diagram and
+   explanation are shown side-by-side
+ */
+/*  @media (max-width:959px) {    this is the "standard" mode */
+    #container               { width:640px }
+    #diagram-and-explanation { display:block }
+    /*  } */
+
+    @media (min-width:960px) { /* this is the mode for wide displays */
+	    #container               { width:auto; max-width:1280px }
+	    #diagram-and-explanation { display:flex }
+    }
+    /*
+       diagram and explanation should both be visible simultaneously
+     */
+    @media (max-width:959px) and (max-height:1200px) {
+	    #utm { width:auto; max-height:40vh }
+    }
+
+    @media (min-width:959px) and (max-height:1010px) {
+	    #utm { width:auto; max-height:70vh }
+    }
+
+    p { margin-left:10px; margin-right:30px } /* some tricky fine-tuning, as... */
+    #tape { margin-right:0px }           /* ...browsers rarely work as expected */
+		</style>
+	</head>
+
+	<body>
+		<p class="large">
+			</br>
+			<b>Marvin Minsky 1967 implementation of the universal Turing machine</b>
+		</p>
+		<div id="container">
+
+			<div id="diagram-and-explanation">
+				<div id="diagram">
+					<img id="utm" src="UTM_no_state.jpeg" class="center">
+
+
+				</div>
+
+				<div id="explanation">
+					<p id="step" class="legend"></p>
+					<p>
+						<button class="button" onclick="reset()">Reset</button>
+						<button class="button" onclick="back()">Back</button>
+						<button class="button" onclick="step()">Step</button>
+						<button class="button" onclick="play_pause()">Play/Pause</button>
+						<button class="button" onclick="change_speed(0.25)">Faster</button>
+						<button class="button" onclick="change_speed(4)">Slower</button>
+						<button class="button" onclick="goto_next_phase()">Next phase</button>
+						<button class="button" id="tape_button" onclick="switch_tape()">Switch to 'A' tape</button>
+					</p>
+					<p class="small">
+						<b>Phases</b></br>
+						i:&nbsp;&nbsp;&nbsp;Locating current quintuple</br>
+						ii:&nbsp;&nbsp;Copying next quintuple id and remembering symbol to write</br>
+						iii:&nbsp;Writing the symbol and housekeeping</br>
+						iv:&nbsp;&nbsp;Move head</br>
+					</p>
+					<p id="description" class="legend"></p>
+				</div>
+			</div>
+			<p id="tape" class="turing_tape" >0000M000000Y00<b>1</b>X0000001X0010110X0100011X0110100Y00</p>
+
+			<p class="small">
+			For details, see the paper <a href="https://arxiv.org/abs/2105.02124">Johnson, Pontus, <i>Intrinsic Propensity for Vulnerability in Computers? Arbitrary Code Execution in the Universal Turing Machine</i>, 2021.</a> and the <a href="https://github.com/pavelastro">Python implementation</a>.
+			</p>
+		</div>
+
+		<script src="turing.js"></script>
+	</body>
+</html>
